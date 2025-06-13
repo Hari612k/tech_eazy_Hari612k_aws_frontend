@@ -20,7 +20,8 @@ This is the frontend of the **Zero Mile Delivery System**, developed using React
 npm install
 
 2. Run the Development Server
-  npm start
+
+   npm start
 
 This will start the app on:
 📍 http://localhost:3000
@@ -52,6 +53,7 @@ Routing is handled in App.js using role-based logic from decoded JWT tokens.
 
 
 Key Features
+
 ✅ JWT Authentication
 ✅ Role-Based UI and Routing
 ✅ Admin:
