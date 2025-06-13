@@ -57,6 +57,8 @@ Key Features
 
 ✅ JWT Authentication
 ✅ Role-Based UI and Routing
+
+
 ✅ Admin:
 
 Create, view, edit, delete parcels
@@ -68,6 +70,7 @@ View parcel summary grouped by pincode/address
 Upload delivery order file
 
 View list of uploaded orders with pagination & filters
+
 
 ✅ Public:
 
