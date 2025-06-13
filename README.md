@@ -83,3 +83,5 @@ Track parcel by tracking number without login
 5. Test Public Parcel Tracking from the home page / without logging in.
 
 
+# Deployment Notes
+If you deploy this app, make sure to update the backend proxy URL in package.json or switch to using .env files.
