@@ -1,70 +1,85 @@
-# Getting Started with Create React App
+# 🚚 Zero Mile Delivery System – Frontend (ReactJS)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the frontend of the **Zero Mile Delivery System**, developed using ReactJS. It connects to a Spring Boot backend and supports role-based access for Admin and Vendor users, as well as public parcel tracking.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 📦 Tech Stack
 
-### `npm start`
+- ReactJS 19
+- React Router DOM v7
+- Axios
+- JWT Decode
+- CSS (custom styling)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## ▶️ Getting Started
 
-### `npm test`
+### 1. Install Dependencies
+npm install
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Run the Development Server
+  npm start
 
-### `npm run build`
+This will start the app on:
+📍 http://localhost:3000
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Proxy Setup (Connect to Backend)
+In your package.json, this line should be present:
+  "proxy": "http://localhost:8080"
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Role-Based Routing
+Routing is handled in App.js using role-based logic from decoded JWT tokens.
 
-### `npm run eject`
+| URL Path   | Component         | Access Level     |
+| ---------- | ----------------- | ---------------- |
+| `/`        | PublicTrackParcel | Public (no auth) |
+| `/login`   | Login             | Public (no auth) |
+| `/admin`   | ParcelForm + Grid | Admin only       |
+| `/upload`  | UploadOrder       | Vendor only      |
+| `/orders`  | OrderList         | Admin & Vendor   |
+| `/summary` | ParcelSummary     | Admin only       |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Login Credentials
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+| Role   | Username  | Password    |
+| ------ | --------- | ----------- |
+| Admin  | `admin`   | `admin@123` |
+| Vendor | `vendor1` | `admin@123` |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+Key Features
+✅ JWT Authentication
+✅ Role-Based UI and Routing
+✅ Admin:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Create, view, edit, delete parcels
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+View parcel summary grouped by pincode/address
 
-### Code Splitting
+✅ Vendor:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Upload delivery order file
 
-### Analyzing the Bundle Size
+View list of uploaded orders with pagination & filters
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+✅ Public:
 
-### Making a Progressive Web App
+Track parcel by tracking number without login
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+# Testing Instructions
+1. Start the backend on port 8080.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+2. Start the frontend on port 3000 using npm start.
 
-### Deployment
+3. Open browser at http://localhost:3000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+4. Use login credentials to explore role-based access.
 
-### `npm run build` fails to minify
+5. Test Public Parcel Tracking from the home page / without logging in.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
