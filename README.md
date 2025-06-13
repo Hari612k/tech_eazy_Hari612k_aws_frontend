@@ -28,6 +28,7 @@ This will start the app on:
 
 # Proxy Setup (Connect to Backend)
 In your package.json, this line should be present:
+
   "proxy": "http://localhost:8080"
 
 
