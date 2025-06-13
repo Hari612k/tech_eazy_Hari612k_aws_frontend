@@ -2,36 +2,45 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const UploadOrder = () => {
-  const [file, setFile] = useState(null);
   const [vendorName, setVendorName] = useState('');
   const [orderDate, setOrderDate] = useState('');
+  const [file, setFile] = useState(null);
+  const [message, setMessage] = useState('');
+  const token = localStorage.getItem('token');
 
-  const handleSubmit = async (e) => {
+  const handleUpload = async (e) => {
     e.preventDefault();
+    if (!file) return alert('Please select a file');
+
     const formData = new FormData();
     formData.append('vendorName', vendorName);
     formData.append('orderDate', orderDate);
     formData.append('file', file);
-    const token = localStorage.getItem('token');
 
     try {
       await axios.post('http://localhost:8080/api/orders/upload', formData, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
       });
-      alert('Order uploaded successfully');
+      setMessage('File uploaded successfully!');
     } catch (err) {
-      alert('Upload failed');
+      setMessage('Upload failed');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Upload Order File</h2>
-      <input type="text" placeholder="Vendor Name" onChange={e => setVendorName(e.target.value)} />
-      <input type="date" onChange={e => setOrderDate(e.target.value)} />
-      <input type="file" onChange={e => setFile(e.target.files[0])} />
-      <button type="submit">Upload</button>
-    </form>
+    <div>
+      <h2>Upload Delivery Order</h2>
+      <form onSubmit={handleUpload}>
+        <input type="text" placeholder="Vendor Name" value={vendorName} onChange={e => setVendorName(e.target.value)} required />
+        <input type="date" value={orderDate} onChange={e => setOrderDate(e.target.value)} required />
+        <input type="file" onChange={e => setFile(e.target.files[0])} required />
+        <button type="submit">Upload</button>
+      </form>
+      {message && <p>{message}</p>}
+    </div>
   );
 };
 

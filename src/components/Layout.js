@@ -4,11 +4,11 @@ const Layout = ({ children }) => {
   return (
     <div className="layout">
       <header>
-        <h1>Parcel Tracking System</h1>
+        <h1>Zero Mile Delivery System</h1>
       </header>
       <main>{children}</main>
       <footer>
-        <p>© 2023 TCTECHNARY</p>
+        <p>© 2025 Techeazy Internship</p>
       </footer>
     </div>
   );

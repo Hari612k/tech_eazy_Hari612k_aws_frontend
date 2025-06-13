@@ -1,3 +1,4 @@
+/* Base styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -5,6 +6,7 @@ body {
   background-color: #f8f9fa;
 }
 
+/* Layout */
 .layout {
   display: flex;
   flex-direction: column;
@@ -30,15 +32,19 @@ footer {
   padding: 1rem;
 }
 
+/* Container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* Table styles */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
 th, td {
@@ -49,31 +55,35 @@ th, td {
 
 th {
   background-color: #f2f2f2;
+  font-weight: bold;
 }
 
 tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
+/* Buttons */
 button {
-  padding: 5px 10px;
+  padding: 6px 12px;
   margin-right: 5px;
   cursor: pointer;
   background-color: #007bff;
   border: none;
   color: white;
   border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
   background-color: #0056b3;
 }
 
+/* Form styles */
 form {
   background: #fff;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
   margin-bottom: 2rem;
 }
 
@@ -91,13 +101,15 @@ input[type="text"],
 input[type="password"],
 input[type="date"],
 input[type="file"],
-input[type="number"] {
+input[type="number"],
+input[type="email"] {
   padding: 6px;
   width: 300px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
+/* List style for summaries */
 ul {
   list-style: none;
   padding-left: 0;
@@ -109,4 +121,15 @@ ul li {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Alert / message */
+.alert {
+  background-color: #ffc107;
+  padding: 10px 15px;
+  border-radius: 4px;
+  color: #333;
+  margin-bottom: 1rem;
+  font-weight: 500;
 }
