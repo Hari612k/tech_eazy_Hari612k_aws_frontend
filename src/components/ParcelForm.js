@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createParcel, updateParcel } from '../services/api';
+import axios from 'axios';
 
 const ParcelForm = ({ parcel, onSuccess }) => {
   const [formData, setFormData] = useState({
@@ -7,82 +7,37 @@ const ParcelForm = ({ parcel, onSuccess }) => {
     deliveryAddress: parcel?.deliveryAddress || '',
     contactNumber: parcel?.contactNumber || '',
     parcelSize: parcel?.parcelSize || '',
-    parcelWeight: parcel?.parcelWeight || 0
+    parcelWeight: parcel?.parcelWeight || ''
   });
 
+  const token = localStorage.getItem('token');
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
       if (parcel) {
-        await updateParcel(parcel.id, formData);
+        await axios.put(`http://localhost:8080/api/parcels/${parcel.id}`, formData, config);
       } else {
-        await createParcel(formData);
+        await axios.post('http://localhost:8080/api/parcels', formData, config);
       }
       onSuccess();
-    } catch (error) {
-      console.error('Error saving parcel:', error);
+    } catch (err) {
+      alert('Error saving parcel');
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        <label>Customer Name:</label>
-        <input
-          type="text"
-          name="customerName"
-          value={formData.customerName}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Delivery Address:</label>
-        <input
-          type="text"
-          name="deliveryAddress"
-          value={formData.deliveryAddress}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Contact Number:</label>
-        <input
-          type="text"
-          name="contactNumber"
-          value={formData.contactNumber}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Parcel Size:</label>
-        <input
-          type="text"
-          name="parcelSize"
-          value={formData.parcelSize}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Parcel Weight (kg):</label>
-        <input
-          type="number"
-          name="parcelWeight"
-          value={formData.parcelWeight}
-          onChange={handleChange}
-          required
-        />
-      </div>
+      <input name="customerName" value={formData.customerName} onChange={handleChange} placeholder="Customer Name" required />
+      <input name="deliveryAddress" value={formData.deliveryAddress} onChange={handleChange} placeholder="Delivery Address" required />
+      <input name="contactNumber" value={formData.contactNumber} onChange={handleChange} placeholder="Contact Number" required />
+      <input name="parcelSize" value={formData.parcelSize} onChange={handleChange} placeholder="Parcel Size" required />
+      <input type="number" name="parcelWeight" value={formData.parcelWeight} onChange={handleChange} placeholder="Weight (kg)" required />
       <button type="submit">{parcel ? 'Update' : 'Create'} Parcel</button>
     </form>
   );
