@@ -1,34 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
+import { getAuthHeader } from '../utils/auth';
 
 const ParcelSummary = () => {
-  const token = localStorage.getItem('token');
   const [summary, setSummary] = useState({});
 
   useEffect(() => {
-    if (!token) return;
+    const fetchSummary = async () => {
+      try {
+        const res = await axios.get('/api/summary/today', {
+          headers: getAuthHeader()
+        });
+        setSummary(res.data);
+      } catch (err) {
+        alert('Failed to load summary');
+      }
+    };
 
-    axios.get('http://localhost:8080/api/summary/today', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(res => setSummary(res.data))
-    .catch(() => alert("Failed to load summary"));
-  }, [token]);
+    fetchSummary();
+  }, []);
 
   return (
-    <div>
-      <h2>Today's Parcel Summary</h2>
+    <div className="grid-container">
+      <h3>Today’s Parcel Summary</h3>
       <table>
         <thead>
           <tr>
             <th>Delivery Address</th>
-            <th>Parcels Count</th>
+            <th>Parcel Count</th>
           </tr>
         </thead>
         <tbody>
-          {Object.entries(summary).map(([address, count]) => (
-            <tr key={address}>
+          {Object.entries(summary).map(([address, count], i) => (
+            <tr key={i}>
               <td>{address}</td>
               <td>{count}</td>
             </tr>

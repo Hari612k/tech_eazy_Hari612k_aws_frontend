@@ -1,43 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const ParcelForm = ({ parcel, onSuccess }) => {
   const [formData, setFormData] = useState({
-    customerName: parcel?.customerName || '',
-    deliveryAddress: parcel?.deliveryAddress || '',
-    contactNumber: parcel?.contactNumber || '',
-    parcelSize: parcel?.parcelSize || '',
-    parcelWeight: parcel?.parcelWeight || ''
+    customerName: '',
+    deliveryAddress: '',
+    contactNumber: '',
+    parcelSize: '',
+    parcelWeight: '',
+    trackingNumber: ''
   });
 
-  const token = localStorage.getItem('token');
+  useEffect(() => {
+    if (parcel) {
+      setFormData(parcel);
+    }
+  }, [parcel]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const config = { headers: { Authorization: `Bearer ${token}` } };
+    const token = localStorage.getItem('token');
     try {
       if (parcel) {
-        await axios.put(`http://localhost:8080/api/parcels/${parcel.id}`, formData, config);
+        await axios.put(`/api/parcels/update/${parcel.id}`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
       } else {
-        await axios.post('http://localhost:8080/api/parcels', formData, config);
+        await axios.post('/api/parcels', formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
       }
+      setFormData({
+        customerName: '', deliveryAddress: '', contactNumber: '',
+        parcelSize: '', parcelWeight: '', trackingNumber: ''
+      });
       onSuccess();
-    } catch (err) {
-      alert('Error saving parcel');
+    } catch (error) {
+      console.error('Error saving parcel:', error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="customerName" value={formData.customerName} onChange={handleChange} placeholder="Customer Name" required />
-      <input name="deliveryAddress" value={formData.deliveryAddress} onChange={handleChange} placeholder="Delivery Address" required />
-      <input name="contactNumber" value={formData.contactNumber} onChange={handleChange} placeholder="Contact Number" required />
-      <input name="parcelSize" value={formData.parcelSize} onChange={handleChange} placeholder="Parcel Size" required />
-      <input type="number" name="parcelWeight" value={formData.parcelWeight} onChange={handleChange} placeholder="Weight (kg)" required />
+    <form onSubmit={handleSubmit} className="form">
+      <input type="text" name="customerName" value={formData.customerName} onChange={handleChange} placeholder="Customer Name" required />
+      <input type="text" name="deliveryAddress" value={formData.deliveryAddress} onChange={handleChange} placeholder="Delivery Address" required />
+      <input type="text" name="contactNumber" value={formData.contactNumber} onChange={handleChange} placeholder="Contact Number" required />
+      <input type="text" name="parcelSize" value={formData.parcelSize} onChange={handleChange} placeholder="Parcel Size" required />
+      <input type="number" name="parcelWeight" value={formData.parcelWeight} onChange={handleChange} placeholder="Parcel Weight" required />
+      <input type="text" name="trackingNumber" value={formData.trackingNumber} onChange={handleChange} placeholder="Tracking Number" required />
       <button type="submit">{parcel ? 'Update' : 'Create'} Parcel</button>
     </form>
   );

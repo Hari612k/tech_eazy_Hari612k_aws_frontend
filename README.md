@@ -1,70 +1,93 @@
-# Getting Started with Create React App
+# Zero Mile Delivery System – Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the ReactJS frontend for the **Zero Mile Delivery System**, built as part of the AWS Internship Project. It supports **user login with JWT**, **role-based UI rendering** for `ADMIN` and `VENDOR`, **public parcel tracking**, and **file uploads**.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🌐 Hosted On
 
-### `npm start`
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:8080`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## ⚙️ Tech Stack
 
-### `npm test`
+- **ReactJS**
+- React Router DOM
+- Axios
+- JWT Decode
+- Tailwind CSS (optional styling)
+- RESTful API integration (Spring Boot Backend)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🔐 Features by Role
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🔓 Public
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- `/`: Track parcel by tracking number (no login required)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 🔐 Login
 
-### `npm run eject`
+- `/login`: Login using `admin` or `vendor` credentials
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 👨‍💼 Admin (ROLE_ADMIN)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- `/admin`: Create, update, delete, and view all parcels
+- `/summary`: View today's delivery summary grouped by address
+- `/orders`: View all uploaded delivery orders
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+### 🚚 Vendor (ROLE_VENDOR)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `/upload`: Upload delivery order file (`.csv`) for parcel entry
+- `/orders`: View their own uploaded orders
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## 🧪 Testing Steps
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 1. Install Dependencies
 
-### Analyzing the Bundle Size
+        npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2.  Start Frontend
 
-### Making a Progressive Web App
+        npm start
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+        Runs on: http://localhost:3000
 
-### Advanced Configuration
+3.  Login Credentials
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+    | Username  | Password    | Role          |
+    | --------- | ----------- | ------------- |
+    | `admin`   | `admin@123` | `ROLE_ADMIN`  |
+    | `vendor1` | `admin@123` | `ROLE_VENDOR` |
 
-### Deployment
+4.  Token Handling
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+JWT token is stored in localStorage after login.
 
-### `npm run build` fails to minify
+It is automatically sent as Authorization: Bearer <token> to backend APIs.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Role is decoded from token to conditionally render UI.
+
+5. Common Issues
+
+   🔁 Always redirects to public page? → Check if token is valid or expired.
+
+   ⚠️ 403 Forbidden? → Ensure correct login and role for the feature.
+
+   📄 File upload not working? → Backend must be running and file should be .csv.
+
+✅ Compatibility
+
+Tested with:
+
+    Backend: Zero Mile Spring Boot Backend
+
+    APIs: Fully integrated with /api/parcels, /api/orders, /auth/login, etc.

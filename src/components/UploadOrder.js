@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './UploadOrder.css';
 
-const UploadOrder = () => {
+const UploadOrder = ({ token }) => {
   const [vendorName, setVendorName] = useState('');
   const [orderDate, setOrderDate] = useState('');
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState('');
-  const token = localStorage.getItem('token');
 
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!file) return alert('Please select a file');
+  const handleUpload = async () => {
+    if (!vendorName || !orderDate || !file) {
+      setMessage('All fields are required.');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('vendorName', vendorName);
@@ -18,27 +20,34 @@ const UploadOrder = () => {
     formData.append('file', file);
 
     try {
-      await axios.post('http://localhost:8080/api/orders/upload', formData, {
+      const response = await axios.post('http://localhost:8080/api/orders/upload', formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         }
       });
-      setMessage('File uploaded successfully!');
-    } catch (err) {
-      setMessage('Upload failed');
+      setMessage(`Success: ${response.data.totalOrders} orders uploaded.`);
+    } catch (error) {
+      setMessage('Upload failed. ' + (error.response?.data?.detail || error.message));
     }
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Upload Delivery Order</h2>
-      <form onSubmit={handleUpload}>
-        <input type="text" placeholder="Vendor Name" value={vendorName} onChange={e => setVendorName(e.target.value)} required />
-        <input type="date" value={orderDate} onChange={e => setOrderDate(e.target.value)} required />
-        <input type="file" onChange={e => setFile(e.target.files[0])} required />
-        <button type="submit">Upload</button>
-      </form>
+      <div className="form-group">
+        <label>Vendor Name:</label>
+        <input type="text" value={vendorName} onChange={e => setVendorName(e.target.value)} />
+      </div>
+      <div className="form-group">
+        <label>Order Date:</label>
+        <input type="date" value={orderDate} onChange={e => setOrderDate(e.target.value)} />
+      </div>
+      <div className="form-group">
+        <label>Upload File:</label>
+        <input type="file" onChange={e => setFile(e.target.files[0])} />
+      </div>
+      <button onClick={handleUpload}>Upload</button>
       {message && <p>{message}</p>}
     </div>
   );

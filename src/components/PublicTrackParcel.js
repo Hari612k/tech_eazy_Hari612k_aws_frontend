@@ -1,20 +1,19 @@
-// src/components/PublicTrackParcel.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
 const PublicTrackParcel = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
   const [parcel, setParcel] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
 
-  const handleTrack = async () => {
+  const handleSearch = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/public/parcel/${trackingNumber}`);
-      setParcel(res.data.data);
-      setError('');
+      setError(null);
+      const response = await axios.get(`/public/parcels/${trackingNumber}`);
+      setParcel(response.data);
     } catch (err) {
+      setError('Parcel not found');
       setParcel(null);
-      setError('Parcel not found.');
     }
   };
 
@@ -26,17 +25,20 @@ const PublicTrackParcel = () => {
         placeholder="Enter Tracking Number"
         value={trackingNumber}
         onChange={(e) => setTrackingNumber(e.target.value)}
+        className="input"
       />
-      <button onClick={handleTrack}>Track</button>
+      <button onClick={handleSearch} className="btn">Track</button>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
+
       {parcel && (
-        <div className="parcel-details">
-          <p><strong>Customer:</strong> {parcel.customerName}</p>
+        <div className="card">
+          <p><strong>Name:</strong> {parcel.customerName}</p>
           <p><strong>Address:</strong> {parcel.deliveryAddress}</p>
           <p><strong>Contact:</strong> {parcel.contactNumber}</p>
           <p><strong>Size:</strong> {parcel.parcelSize}</p>
           <p><strong>Weight:</strong> {parcel.parcelWeight}</p>
+          <p><strong>Tracking:</strong> {parcel.trackingNumber}</p>
         </div>
       )}
     </div>

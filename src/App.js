@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { getRoleFromToken, getToken } from './utils/jwt';
 import Layout from './components/Layout';
 import ParcelForm from './components/ParcelForm';
 import ParcelGrid from './components/ParcelGrid';
@@ -13,23 +13,12 @@ import './styles.css';
 
 const App = () => {
   const [editingParcel, setEditingParcel] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(getToken());
   const [role, setRole] = useState(null);
 
   useEffect(() => {
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        const authorities = decoded?.authorities || decoded?.role || [];
-        const userRole = Array.isArray(authorities) ? authorities[0] : authorities;
-        setRole(userRole);
-      } catch (err) {
-        console.error('Invalid token:', err);
-        setRole(null);
-      }
-    } else {
-      setRole(null);
-    }
+    const currentRole = getRoleFromToken();
+    setRole(currentRole);
   }, [token]);
 
   const handleSuccess = () => {
@@ -40,13 +29,9 @@ const App = () => {
     <Router>
       <Layout>
         <Routes>
-          {/* Public route */}
           <Route path="/" element={<PublicTrackParcel />} />
-
-          {/* Login route */}
           <Route path="/login" element={<Login setToken={setToken} />} />
 
-          {/* Protected: Admin only */}
           {role === 'ROLE_ADMIN' && (
             <>
               <Route path="/admin" element={
@@ -60,17 +45,14 @@ const App = () => {
             </>
           )}
 
-          {/* Protected: Vendor only */}
           {role === 'ROLE_VENDOR' && (
             <Route path="/upload" element={<UploadOrder token={token} />} />
           )}
 
-          {/* Shared (Admin or Vendor) */}
-          {(role === 'ROLE_VENDOR' || role === 'ROLE_ADMIN') && (
+          {(role === 'ROLE_ADMIN' || role === 'ROLE_VENDOR') && (
             <Route path="/orders" element={<OrderList token={token} />} />
           )}
 
-          {/* Fallback route */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Layout>
