@@ -1,93 +1,70 @@
-# Zero Mile Delivery System – Frontend
+# Zero Mile Delivery System – Frontend (Assignment 4)
 
-This is the ReactJS frontend for the **Zero Mile Delivery System**, built as part of the AWS Internship Project. It supports **user login with JWT**, **role-based UI rendering** for `ADMIN` and `VENDOR`, **public parcel tracking**, and **file uploads**.
+This ReactJS frontend is used to track parcels, upload delivery orders, and view parcel summaries based on user roles.
 
----
+## 🚀 Tech Stack
 
-## 🌐 Hosted On
-
-- Frontend: `http://localhost:3000`
-- Backend: `http://localhost:8080`
-
----
-
-## ⚙️ Tech Stack
-
-- **ReactJS**
-- React Router DOM
+- ReactJS
 - Axios
-- JWT Decode
-- Tailwind CSS (optional styling)
-- RESTful API integration (Spring Boot Backend)
+- React Router DOM
+- JWT-Decode
 
 ---
 
-## 🔐 Features by Role
+## 🌐 Backend Configuration
 
-### 🔓 Public
-
-- `/`: Track parcel by tracking number (no login required)
-
-### 🔐 Login
-
-- `/login`: Login using `admin` or `vendor` credentials
+- Backend Base URL: `http://<YOUR_EC2_PUBLIC_IP>:8080`
+- Configured in: `src/api.js`
 
 ---
 
-### 👨‍💼 Admin (ROLE_ADMIN)
+## 🔐 Authentication
 
-- `/admin`: Create, update, delete, and view all parcels
-- `/summary`: View today's delivery summary grouped by address
-- `/orders`: View all uploaded delivery orders
-
----
-
-### 🚚 Vendor (ROLE_VENDOR)
-
-- `/upload`: Upload delivery order file (`.csv`) for parcel entry
-- `/orders`: View their own uploaded orders
+- Login to receive JWT token.
+- Token is stored in `localStorage` and attached automatically to requests using Axios interceptors.
 
 ---
 
-## 🧪 Testing Steps
+## 🎯 Features
 
-### 1. Install Dependencies
+- Public users can track parcels.
+- Vendors can upload delivery orders and view their orders.
+- Admins can manage parcels, view orders, and access parcel summaries.
 
-        npm install
+---
 
-2.  Start Frontend
+## 🧪 Frontend Testing Steps
 
-        npm start
+1.  Start the backend on EC2.
+2.  Start the frontend locally:
 
-        Runs on: http://localhost:3000
+    ```bash
+    npm start
 
-3.  Login Credentials
+    ```
 
-    | Username  | Password    | Role          |
-    | --------- | ----------- | ------------- |
-    | `admin`   | `admin@123` | `ROLE_ADMIN`  |
-    | `vendor1` | `admin@123` | `ROLE_VENDOR` |
+3.  Login using:
 
-4.  Token Handling
+        Admin: admin / admin@123
 
-JWT token is stored in localStorage after login.
+        Vendor: vendor1 / admin@123
 
-It is automatically sent as Authorization: Bearer <token> to backend APIs.
+4.  Test role-based navigation:
 
-Role is decoded from token to conditionally render UI.
+        Admin: Manage parcels, view orders, view summaries.
 
-5. Common Issues
+        Vendor: Upload orders, view orders.
 
-   🔁 Always redirects to public page? → Check if token is valid or expired.
+        Public: Parcel tracking without login.
 
-   ⚠️ 403 Forbidden? → Ensure correct login and role for the feature.
+📂 Important
 
-   📄 File upload not working? → Backend must be running and file should be .csv.
+        The api.js file has been updated to point to AWS EC2 public IP.
 
-✅ Compatibility
+        Make sure your EC2 instance is running while testing the frontend.
 
-Tested with:
+✅ Deployment Note
 
-    Backend: Zero Mile Spring Boot Backend
+        Currently tested in local frontend with backend hosted on EC2.
 
-    APIs: Fully integrated with /api/parcels, /api/orders, /auth/login, etc.
+        Can be further deployed to AWS S3 or other hosting services.
