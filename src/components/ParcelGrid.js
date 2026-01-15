@@ -1,30 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { getParcels, deleteParcel } from '../services/api';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const ParcelGrid = ({ onEdit }) => {
   const [parcels, setParcels] = useState([]);
-
-  useEffect(() => {
-    fetchParcels();
-  }, []);
+  const token = localStorage.getItem('token');
 
   const fetchParcels = async () => {
     try {
-      const response = await getParcels();
-      setParcels(response.data);
-    } catch (error) {
-      console.error('Error fetching parcels:', error);
+      const res = await axios.get('http://localhost:8080/api/parcels', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setParcels(res.data);
+    } catch (err) {
+      alert('Error fetching parcels');
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await deleteParcel(id);
+      await axios.delete(`http://localhost:8080/api/parcels/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       fetchParcels();
-    } catch (error) {
-      console.error('Error deleting parcel:', error);
+    } catch (err) {
+      alert('Error deleting parcel');
     }
   };
+
+  useEffect(() => {
+    fetchParcels();
+  }, []);
 
   return (
     <div>
@@ -32,14 +37,14 @@ const ParcelGrid = ({ onEdit }) => {
       <table>
         <thead>
           <tr>
-            <th>Customer Name</th>
-            <th>Delivery Address</th>
-            <th>Tracking Number</th>
+            <th>Customer</th>
+            <th>Address</th>
+            <th>Tracking #</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {parcels.map((parcel) => (
+          {parcels.map(parcel => (
             <tr key={parcel.id}>
               <td>{parcel.customerName}</td>
               <td>{parcel.deliveryAddress}</td>
